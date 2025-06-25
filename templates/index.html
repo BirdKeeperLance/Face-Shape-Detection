@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Face Shape Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="file"],
+        input[type="submit"] {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .result-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 30px;
+            gap: 30px;
+        }
+
+        img {
+            max-width: 300px;
+            border: 3px solid #2ecc71;
+            border-radius: 8px;
+        }
+
+        .result-text {
+            max-width: 400px;
+            text-align: left;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-text h2 {
+            color: #2c3e50;
+        }
+
+        .error {
+            color: red;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Face Shape Classifier</h1>
+    <p>Select a clear image of your face. The model will detect your face and classify it.</p>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <br>
+        <input type="submit" value="Classify Face Shape">
+    </form>
+
+    {% if result_img %}
+    <div class="result-container">
+        <img src="{{ url_for('static', filename='uploads/annotated.jpg') }}" alt="Result Image">
+        <div class="result-text">
+            <h2>Prediction: {{ label }}</h2>
+            <p>Confidence: {{ confidence }}</p>
+            <p>
+                {% if label == 'round' %}
+                    A round face has similar width and length with soft curves and minimal angles.
+                {% elif label == 'square' %}
+                    A square face has a strong jawline, broad forehead, and the face length is similar to width.
+                {% elif label == 'oval' %}
+                    An oval face is longer than wide, with a rounded jaw and balanced features.
+                {% elif label == 'oblong' %}
+                    An oblong face is longer than oval, often with a tall forehead and straighter sides.
+                {% else %}
+                    Unknown shape.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+</body>
+</html>
